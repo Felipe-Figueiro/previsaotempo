@@ -1,0 +1,121 @@
+:root {
+    --main-color: linear-gradient(45deg, #555555 30%, #000000);
+    ;
+}
+
+body {
+    height: 100vh;
+    background-color: aliceblue;
+    color: black;
+    font-family: 'Gill Sans', 'Gill Sans MT', 'Trebuchet MS', ;
+    transition: background 0.3s, color 0.3s;
+}
+
+/*          tema escuro      */
+body.dark {
+    background: linear-gradient(0deg, #303030 0% 5%, #7a7a7a 60% 100%);
+    color: rgb(255, 255, 255);
+}
+
+#map {
+    height: 400px;
+    width: 80%;
+    border-radius: 15px;
+    margin: 20px;
+}
+.leaflet-layer.dark,
+.leaflet-control-zoom-in.dark,
+.leaflet-control-zoom-out.dark,
+.leaflet-control-attribution.dark{
+  filter: invert(100%) hue-rotate(180deg) brightness(95%) contrast(90%);
+}
+.leaflet-layer.dark,
+.leaflet-control-zoom-in.dark,
+.leaflet-control-zoom-out.dark,
+.leaflet-control-attribution.dark{
+  filter: none;
+}
+.current-weather {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 20px;
+    border-radius: 15px;
+    box-shadow: #00000048 0px 7px 5px;
+}
+
+.days-container {
+    padding: 4vw;
+    border-radius: 20px;
+    box-shadow: #00000048 0px 7px 5px;
+    background-color: #d3d3d300;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 2vw;
+    justify-content: center;
+}
+
+.day-card {
+    color: black;
+    gap: 10px;
+    background: linear-gradient(0deg, #868686 0% 5%, #f0f0f0 60% 100%);
+    border-radius: 8px;
+    padding: 10px;
+    text-align: center;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: background 0.3s, color 0.3s;
+}
+
+.day-card.dark {
+    color: white;
+    background: linear-gradient(0deg, #303030 0% 5%, #7a7a7a 60% 100%);
+}
+
+.dashboard h1 {
+    margin: 0;
+    margin-top: 10px;
+}
+
+.dashboard {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    position: fixed;
+    top: 0;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 20px;
+}
+
+#toggle-theme {
+    z-index: 9999;
+    display: flex;
+    flex-wrap: nowrap;
+    background: rgb(0, 0, 0);
+    width: 50px;
+    height: 28px;
+    cursor: pointer;
+    border-radius: 60px;
+}
+
+#bola {
+    font-size: large;
+    transition: all 0.3s;
+    translate: -3px;
+    height: 25px;
+    width: 25px;
+    border-radius: 100%;
+    margin: 0;
+}
+
+#toggle-theme.dark {
+    background-color: white;
+}
+
+button.dark {
+    background: rgb(255, 255, 255);
+
+}

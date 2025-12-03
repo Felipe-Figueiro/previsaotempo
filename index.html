@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+    <style>
+        #map {
+            justify-self: center;
+            height: 40vh;
+            width: 60vw;
+        }
+    </style>
+</head>
+
+<body id="body">
+    <div
+        style="display: flex; flex-direction: row;justify-content: center; align-items: center; font-size: x-large; width: 120px; margin: 10px; border-radius: 10%;">
+        <button id="toggle-theme">
+            <p id="bola">🌕</p>
+        </button>
+    </div>
+    <div class="dashboard">
+        <h1>Consultar previsão</h1>
+        <div class="search-area">
+            <input type="text" id="cityInput" placeholder="Digite a ciade..">
+            <button onclick="buscarClima()">Buscar</button>
+            <button class="geo-btn" onclick="buscarPorLocalizacao()">Usar Localização</button>
+        </div>
+        <div id="weatherResult" class="weather-containerf"></div>
+    </div>
+
+    
+</body>
+
+</html>
+<script src="script.js"></script>
