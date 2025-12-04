@@ -56,29 +56,9 @@ L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 }).addTo(map);
 var marker = L.marker([data.coord.lat, data.coord.lon]).addTo(map);
 marker.bindPopup(data.name).openPopup();
-if (document.body.classList.contains("dark")) {
-        aplicarTemaMapa(true);
-    }
+aplicarTemaMapa(document.body.classList.contains('dark'));
 }
-function aplicarTemaMapa(ativarDark) {
-    // Seleciona as camadas do mapa que existem AGORA
-    const mapLayers = document.querySelectorAll(".leaflet-layer");
-    const mapZoomIn = document.querySelectorAll(".leaflet-control-zoom-in");
-    const mapZoomOut = document.querySelectorAll(".leaflet-control-zoom-out");
-    const mapAttrib = document.querySelectorAll(".leaflet-control-attribution");
 
-    if (ativarDark) {
-        mapLayers.forEach(l => l.classList.add("dark"));
-        mapZoomIn.forEach(z => z.classList.add("dark"));
-        mapZoomOut.forEach(z => z.classList.add("dark"));
-        mapAttrib.forEach(a => a.classList.add("dark"));
-    } else {
-        mapLayers.forEach(l => l.classList.remove("dark"));
-        mapZoomIn.forEach(z => z.classList.remove("dark"));
-        mapZoomOut.forEach(z => z.classList.remove("dark"));
-        mapAttrib.forEach(a => a.classList.remove("dark"));
-    }
-}
 
 /*************************************** PREVISÃO 5DIAS ***********************/
 async function buscarPrevisao5Dias(cidade) {
@@ -151,36 +131,51 @@ if (button) {
         document.body.classList.toggle("dark");
         button.classList.toggle("dark");
 
-        const dayCards = document.querySelectorAll(".day-card");
-        dayCards.forEach(card => {
-            card.classList.toggle("dark");
-        });
-        
         const bola = document.getElementById("bola");
         bola.classList.toggle("dark");
         if (body.classList.contains("dark")) {
             bola.textContent = "🌑";
             bola.style.transform = "translateX(16px)";
+            aplicarTemaMapa(true);
         } else {
             bola.textContent = "🌕";
             bola.style.transform = "translateX(-2px)";
+            aplicarTemaMapa(false);
         }
     }); 
+}
+function aplicarTemaMapa(ativarDark) {
+    const mapLayers = document.querySelectorAll(".leaflet-layer");
+    const mapZoomIn = document.querySelectorAll(".leaflet-control-zoom-in");
+    const mapZoomOut = document.querySelectorAll(".leaflet-control-zoom-out");
+    const mapAttrib = document.querySelectorAll(".leaflet-control-attribution");
+
+    if (ativarDark) {
+        mapLayers.forEach(l => l.classList.add("dark"));
+        mapZoomIn.forEach(z => z.classList.add("dark"));
+        mapZoomOut.forEach(z => z.classList.add("dark"));
+        mapAttrib.forEach(a => a.classList.add("dark"));
+    } else {
+        mapLayers.forEach(l => l.classList.remove("dark"));
+        mapZoomIn.forEach(z => z.classList.remove("dark"));
+        mapZoomOut.forEach(z => z.classList.remove("dark"));
+        mapAttrib.forEach(a => a.classList.remove("dark"));
+    }
+    
 }
 
 
 
+/****                       FORMULARIO DE COTATO        
 
-/****                       FORMULARIO DE COTATO             *********/
-
-const formContato = document.getElementById('formContato');
+const button = document.getElementById("toggle-theme");
 const motivo = document.getElementById('motivo');
 const nomesup = document.getElementById('nome');
 const emailsup = document.getElementById('email');
 const msgsup = document.getElementById('mensagem');
 
 if (formContato) {
-    formContato.addEventListener('submit', function (event) {
+    formContato.addEventListener('click', function (event) {
 
         event.preventDefault();
 
@@ -200,4 +195,4 @@ if (formContato) {
 
 
     });
-}
+}     *********/
