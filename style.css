@@ -3,7 +3,7 @@
 }
 
 body {
-    height: 100vh;
+    height: auto;
     background-color: aliceblue;
     color: black;
     font-family: 'Oswald', 'Gill Sans', 'Gill Sans MT', 'Trebuchet MS';
