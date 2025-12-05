@@ -105,8 +105,8 @@ button.dark:hover {
     transition: background 0.3s, color 0.3s;
 }
 .grafico {
-    width: 80%;
-    max-width: 800px;
+    width: 80vw;
+    max-width: 80vw;
     margin: 20px auto;
     padding: 20px;
     max-height: 200px;
