@@ -1,5 +1,5 @@
 const API_KEY = "c2ecc90239ecd0fe49bdd963092e4f44";
-
+let myChart = null;
 
 async function buscarClima(cidadeDireta = null) {
     const cidade = cidadeDireta || document.getElementById("cityInput").value;
@@ -44,9 +44,14 @@ function renderClimaAtual(data) {
         </div>  
         <div id="map" style="margin-top: 20px ;"></div>
     </div>
+        <h2 style="justify-self: center;">Previsão ao longo do dia</h2>
+        <canvas id="grafico" class="grafico"></canvas>
     <h3>Previsão para 5 dias</h3>
     <div class="days-container" id="diasPrevisao"></div> 
-    </div>`;
+    </div>
+
+    `;
+    
     /***********      LOCALIZAÇÃO                      *************/
 
     var map = L.map('map').setView([data.coord.lat, data.coord.lon], 12);
@@ -60,50 +65,67 @@ aplicarTemaMapa(document.body.classList.contains('dark'));
 }
 
 
-/*************************************** PREVISÃO 5DIAS ***********************/
+/**************** PREVISÃO DAS PROXIMAS 24h */
 async function buscarPrevisao5Dias(cidade) {
     const urlPrev = `https://api.openweathermap.org/data/2.5/forecast?q=${cidade}&appid=${API_KEY}&units=metric&lang=pt_br`;
 
     try {
         const respPrev = await fetch(urlPrev);
         const dataPrev = await respPrev.json();
+        
+        const hoje = new Date().toLocaleDateString('en-CA'); 
+    
+        const listaHoje = dataPrev.list.filter(item => item.dt_txt.includes(hoje));
+
+
+        let labelsGrafico = [];
+        let tempsGrafico = [];
+
+        if (listaHoje.length > 0) {
+
+            labelsGrafico = listaHoje.map(item => {
+                const date = new Date(item.dt * 1000);
+                return date.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+            });
+            tempsGrafico = listaHoje.map(item => item.main.temp);
+        } else {
+            labelsGrafico = ["Fim do dia"];
+            tempsGrafico = [null]; 
+        }
+
+        renderizarGrafico(labelsGrafico, tempsGrafico);
+
 
         const diasDiv = document.getElementById("diasPrevisao");
-
-        const listaFiltrada = dataPrev.list.filter(i => i.dt_txt.includes("12:00:00"));
-
-        let labels = [];
-        let temps = [];
+        const listaParaCards = dataPrev.list.filter(i => i.dt_txt.includes("12:00:00"));
 
         diasDiv.innerHTML = "";
 
         for (let i = 0; i <= 5; i++) {
-            const dia = listaFiltrada[i];
+            const dia = listaParaCards[i];
             if (!dia) break;
 
             const desc = dia.weather[0].description;
             const emoji = escolherEmoji(desc);
-
             const dataDia = new Date(dia.dt * 1000);
             const nomeDia = dataDia.toLocaleString("pt-BR", { weekday: "long" });
-
-            labels.push(nomeDia);
-            temps.push(dia.main.temp);
+            const umidade = dia.main.humidity;
 
             diasDiv.innerHTML += `
                 <div class="day-card">
                     <h4>${nomeDia.toUpperCase()}</h4>
                     <p>${emoji} ${desc}</p>
                     <p>${dia.main.temp}°C</p>
+                    <p>Umidade: ${umidade}%</p>
                 </div>
-        `;
+            `;
         }
-        renderChart(labels, temps);
+
     } catch (error) {
-        result.innerHTML = "<p>Erro ao buscar dados!</p>";
+        console.error(error);
+        const result = document.getElementById("weatherResult");
+        if (result) result.innerHTML += "<p>Erro ao gerar previsão!</p>";
     }
-
-
 }
 function escolherEmoji(desc) {
     if (desc.includes("nublado")) return "☁️☁️"
@@ -115,11 +137,6 @@ function escolherEmoji(desc) {
     if (desc.includes("neve")) return "❄️"
 
 }
-/*****                  PREVISÃO MEIO DIA               */
-
-
-
-
 
 // ---                   Lógica de Tema             ---/
 
@@ -165,34 +182,54 @@ function aplicarTemaMapa(ativarDark) {
 }
 
 
+/******         CÓDIGO DO GRÁFICO que mostra a previsão das 00 ás 23h do dia de hoje */
+function renderizarGrafico(labels, temps) {
+    const ctx = document.getElementById("grafico");
 
-/****                       FORMULARIO DE COTATO        
+    if (myChart !== null) {
+        myChart.destroy();
+    }
 
-const button = document.getElementById("toggle-theme");
-const motivo = document.getElementById('motivo');
-const nomesup = document.getElementById('nome');
-const emailsup = document.getElementById('email');
-const msgsup = document.getElementById('mensagem');
+    // Define cores baseadas no tema atual
+    const isDark = document.body.classList.contains('dark');
+    const corTexto = isDark ? '#ffffff' : '#333333';
+    const corLinha = isDark ? '#ffffff' : '#555555';
+    const corFundo = isDark ? 'rgba(255, 255, 255, 0.2)' : 'rgba(0, 0, 0, 0.1)';
 
-if (formContato) {
-    formContato.addEventListener('click', function (event) {
-
-        event.preventDefault();
-
-
-        const ticketSuporte = {
-
-            motivo: motivo ? motivo.value : "Não especificado",
-            nome: nomesup.value.trim(),
-            email: emailsup.value.trim(),
-            mensagem: msgsup.value.trim()
-        };
-
-        localStorage.setItem('ticketSuporte', JSON.stringify(ticketSuporte));
-
-        alert('Suporte enviado com sucesso!');
-        formContato.reset();
-
-
+    myChart = new Chart(ctx, {
+        type: 'line', 
+        data: {
+            labels: labels,
+            datasets: [{
+                label: 'Temperatura (°C)',
+                data: temps,
+                borderWidth: 2,
+                borderColor: corLinha,
+                backgroundColor: corFundo,
+                tension: 0.3, 
+                fill: true,
+                pointBackgroundColor: corLinha
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+                legend: {
+                    labels: { color: corTexto }
+                }
+            },
+            scales: {
+                y: {
+                    beginAtZero: false,
+                    ticks: { color: corTexto },
+                    grid: { color: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)' }
+                },
+                x: {
+                    ticks: { color: corTexto },
+                    grid: { color: isDark ? 'rgba(255,255,255,0.1)' : 'rgba(0,0,0,0.1)' }
+                }
+            }
+        }
     });
-}     *********/
+}

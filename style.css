@@ -77,6 +77,7 @@ button.dark:hover {
     justify-content: center;
     gap: 10px;
     padding: 20px;
+    width: 15vw;
     border-radius: 15px;
     box-shadow: #00000048 0px 7px 5px;
 }
@@ -94,6 +95,7 @@ button.dark:hover {
 
 .day-card {
     color: black;
+    width: 12vw;;
     gap: 10px;
     background: linear-gradient(0deg, #868686 0% 5%, #f0f0f0 60% 100%);
     border-radius: 8px;
@@ -102,7 +104,16 @@ button.dark:hover {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     transition: background 0.3s, color 0.3s;
 }
-
+.grafico {
+    width: 80%;
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    max-height: 200px;
+    border-radius: 15px;
+    box-shadow: #00000048 0px 7px 5px;
+    background-color: #ffffff;
+}
 body.dark .day-card {
     color: white;
     background: linear-gradient(0deg, #303030 0% 5%, #7a7a7a 60% 100%);
@@ -115,7 +126,7 @@ body.dark .day-card {
 
 .dashboard {
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    position: fixed;
+    position: relative;
     top: 0;
     width: 100%;
     display: flex;
